@@ -39,7 +39,7 @@ const (
 	retryBackoffSteps           = 6
 )
 
-// Utility for retrying the given function with exponential backoff.
+// RetryWithExponentialBackOff retries the given function with exponential backoff.
 func RetryWithExponentialBackOff(fn wait.ConditionFunc) error {
 	backoff := wait.Backoff{
 		Duration: retryBackoffInitialDuration,
@@ -50,6 +50,7 @@ func RetryWithExponentialBackOff(fn wait.ConditionFunc) error {
 	return wait.ExponentialBackoff(backoff, fn)
 }
 
+// IsRetryableAPIError checks whether an error is a retryable API error.
 func IsRetryableAPIError(err error) bool {
 	// These errors may indicate a transient error that we can retry in tests.
 	if apierrs.IsInternalError(err) || apierrs.IsTimeout(err) || apierrs.IsServerTimeout(err) ||
@@ -63,6 +64,7 @@ func IsRetryableAPIError(err error) bool {
 	return false
 }
 
+// CreatePodWithRetries
 func CreatePodWithRetries(c clientset.Interface, namespace string, obj *v1.Pod) error {
 	if obj == nil {
 		return fmt.Errorf("Object provided to create is empty")

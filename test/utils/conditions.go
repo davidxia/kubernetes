@@ -23,6 +23,8 @@ import (
 	podutil "k8s.io/kubernetes/pkg/api/v1/pod"
 )
 
+// ContainerFailures is the terminated state of a container and how many times
+// it has been restarted.
 type ContainerFailures struct {
 	status   *v1.ContainerStateTerminated
 	Restarts int
@@ -44,6 +46,8 @@ func PodRunningReady(p *v1.Pod) (bool, error) {
 	return true, nil
 }
 
+// PodRunningReadyOrSucceeded checks whether pod p's phase is succeeded or
+// running with a ready condition of status true.
 func PodRunningReadyOrSucceeded(p *v1.Pod) (bool, error) {
 	// Check if the phase is succeeded.
 	if p.Status.Phase == v1.PodSucceeded {
